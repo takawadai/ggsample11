@@ -101,6 +101,7 @@ int GgApp::main(int argc, const char* const* argv)
   }
 
   //デプステクスチャを作成する
+  /**/
   GLuint dtex;
   glGenTextures(1, &dtex);
   glTexImage2D(GL_TEXTURE_2D,0, GL_DEPTH_COMPONENT, dWidth, dHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
@@ -108,21 +109,10 @@ int GgApp::main(int argc, const char* const* argv)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  /**/
 
   // ビュー変換行列を mv に求める
   const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
-
-  //視点座標系の光源位置を求め光源データに設定
-  mv.projection(light.position, lp);
-
-  //影付き処理用の視野変換行列を求める
-  const GgMatrix mvs(ggLookat(lp[0], lp[1], lp[2], lt[0], lt[1], lt[2], 0.0f, 0.0f, 1.0f));
-
-  //影付き処理用の投影変換行列を求める
-  const GgMatrix mps(ggPerspective(1.5f, 1.0f, 1.0f, 5.0f));
-
-  //影付き処理用の視野変換行列を求める
-  const GgMatrix ms(mps * mvs);
 
   //
   // 影つけ処理の設定
@@ -155,7 +145,22 @@ int GgApp::main(int argc, const char* const* argv)
       0.0f,   0.0f,   1.0f,   0.0f,
       0.0f,   0.0f,   0.0f,   1.0f
   };
-  const GgMatrix ms{ m };
+
+  // ビュー変換行列を mv に求める
+  //const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
+
+  //視点座標系の光源位置を求め光源データに設定
+  mv.projection(light.position, lp);
+
+  //影付き処理用の視野変換行列を求める
+  const GgMatrix mvs(ggLookat(lp[0], lp[1], lp[2], lt[0], lt[1], lt[2], 0.0f, 0.0f, 1.0f));
+
+  //影付き処理用の投影変換行列を求める
+  const GgMatrix mps(ggPerspective(1.5f, 1.0f, 1.0f, 5.0f));
+
+  //影付き処理用の視野変換行列を求める
+  const GgMatrix ms(mps * mvs);
+  //const GgMatrix ms{ m };
 
   //
   // その他の設定
