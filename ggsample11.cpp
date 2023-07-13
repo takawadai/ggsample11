@@ -241,6 +241,10 @@ int GgApp::main(int argc, const char* const* argv)
         object->draw();
       }
 
+      //デプスバッファをテクスチャに転送
+      glReadPixels(0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
+
+
     }
     // 影の描画
     //陰面処理の無効化
