@@ -65,6 +65,9 @@ int GgApp::main(int argc, const char* const* argv)
   // ウィンドウを作成する (この行は変更しないでください)
   Window window{ argc > 1 ? argv[1] : PROJECT_NAME, dWidth, dHeight };
 
+  //ウィンドウサイズの変更を抑制する
+  glfwSetWindowSizeLimits(window.get(), dWidth, dHeight, GLFW_DONT_CARE, GLFW_DONT_CARE);
+
   // プログラムオブジェクトの作成
   GgSimpleShader shader{ PROJECT_NAME ".vert", PROJECT_NAME ".frag" };
 
