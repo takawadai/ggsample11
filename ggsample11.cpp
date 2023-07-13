@@ -162,6 +162,11 @@ int GgApp::main(int argc, const char* const* argv)
   const GgMatrix ms(mps * mvs);
   //const GgMatrix ms{ m };
 
+  //デプステクスチャのサンプラのuniform変数の場所
+  const GLint depthLoc(glGetUniformLocation(shader.get(), "depth"));
+  //シャドウマップ用の変換行列のuniform変数の場所を取り出す
+  const GLint msLoc(glGetUniformLocation(shader.get(), "ms"));
+
   //
   // その他の設定
   //
@@ -210,7 +215,7 @@ int GgApp::main(int argc, const char* const* argv)
 
     // 影の描画
     //陰面処理の無効化
-    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_DEPTH_TEST);
     for (int i = 0; i < objects; ++i)
     {
       // アニメーションの変換行列
