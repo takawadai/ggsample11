@@ -200,6 +200,30 @@ int GgApp::main(int argc, const char* const* argv)
     // シェーダプログラムの使用開始
     shader.use(lightBuffer);
 
+    //視点を光源位置においてレンダリング
+    glViewport(0, 0, dWidth, dHeight);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    for (int i = 1; i <= objects; ++i)
+    {
+      const GgMatrix ma(animate(t, i));
+      shader.loadMatrix(mps, mvs * ma);
+      object->draw();
+    }
+
+    //デプスバッファをテクスチャに転送
+    glReadPixels(0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, dtex);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
+
+
+    //デプステクスチャのテクスチャユニットを指定する
+    glUniform1i(depthLoc, 0);
+    glUniformMatrix4fv(msLoc, 1, GL_FALSE, ms.get());
+
+    //視点方向からのレンダリング
+    glViewport(0, 0, window.getWidth(), window.getHeight());
+
     // 画面消去
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -223,45 +247,6 @@ int GgApp::main(int argc, const char* const* argv)
    //陰面処理の無効化
    //glDisable(GL_DEPTH_TEST);
 
-    //シェーダプログラムの使用開始
-    while (window.shouldClose() == GL_FALSE)
-    {
-      const float t(static_cast<float>(fmod(glfwGetTime(), cycle) / cycle));
-
-      const GgMatrix mp(ggPerspective(0.5f, window.getAspect(), 1.0f, 15.0f));
-
-
-      //シェーダプログラムの使用開始
-      shader.use(light);
-      glViewport(0, 0, dWidth, dHeight);
-
-      //視点を光源位置においてレンダリング
-      glClear(GL_DEPTH_BUFFER_BIT);
-      for (int i = 1; i <= objects; ++i)
-      {
-        const GgMatrix ma(animate(t, i));
-        shader.loadMatrix(mps, mvs * ma);
-        object->draw();
-      }
-
-      //デプスバッファをテクスチャに転送
-      glReadPixels(0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, dtex);
-      glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
-
-      //デプステクスチャのテクスチャユニットを指定する
-      glUniform1i(depthLoc, 0);
-      glUniformMatrix4fv(msLoc, 1, GL_FALSE, ms.get());
-
-      //視点方向からのレンダリング
-      glViewport(0, 0, window.getWidth(), window.getHeight());
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-      shader.loadMatrix(mp, mv);
-
 
       // シェーダプログラムの使用開始 (時刻 t にもとづく回転アニメーション)
       for (int i = 0; i < objects; ++i)
@@ -277,7 +262,7 @@ int GgApp::main(int argc, const char* const* argv)
         object->draw();
       }
 
-    }
+    
     /**
     // 影の描画
     //陰面処理の無効化
