@@ -111,6 +111,13 @@ int GgApp::main(int argc, const char* const* argv)
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   /**/
 
+  //シャドウマップ用のテクスチャパラメータ
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
+  std::unique_ptr<GLfloat> depth(new GLfloat[dWidth * dWidth]);
+
   // ビュー変換行列を mv に求める
   const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
 
