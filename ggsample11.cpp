@@ -229,9 +229,17 @@ int GgApp::main(int argc, const char* const* argv)
 
 
       //シェーダプログラムの使用開始
-      shader.use();
-      shader.loadLight(light);//テキスト通りなのにエラーでた
+      shader.use(light);
       glViewport(0, 0, dWidth, dHeight);
+
+      //視点を光源位置においてレンダリング
+      glClear(GL_DEPTH_BUFFER_BIT);
+      for (int i = 1; i <= objects; ++i)
+      {
+        const GgMatrix ma(animate(t, i));
+        shader.loadMatrix(mps, mvs * ma);
+        object->draw();
+      }
 
     }
     // 影の描画
