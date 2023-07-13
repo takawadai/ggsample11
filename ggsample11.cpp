@@ -100,7 +100,14 @@ int GgApp::main(int argc, const char* const* argv)
     objectMaterialBuffer.loadAmbientAndDiffuse(r, g, b, 1.0f, i);
   }
 
-
+  //デプステクスチャを作成する
+  GLuint dtex;
+  glGenTextures(1, &dtex);
+  glTexImage2D(GL_TEXTURE_2D,0, GL_DEPTH_COMPONENT, dWidth, dHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // ビュー変換行列を mv に求める
   const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
