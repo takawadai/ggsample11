@@ -219,6 +219,9 @@ int GgApp::main(int argc, const char* const* argv)
   
     // 影の材質
     materialBuffer.select();
+    // 影の描画
+   //陰面処理の無効化
+   //glDisable(GL_DEPTH_TEST);
 
     //シェーダプログラムの使用開始
     while (window.shouldClose() == GL_FALSE)
@@ -244,8 +247,38 @@ int GgApp::main(int argc, const char* const* argv)
       //デプスバッファをテクスチャに転送
       glReadPixels(0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
 
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, dtex);
+      glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
+
+      //デプステクスチャのテクスチャユニットを指定する
+      glUniform1i(depthLoc, 0);
+      glUniformMatrix4fv(msLoc, 1, GL_FALSE, ms.get());
+
+      //視点方向からのレンダリング
+      glViewport(0, 0, window.getWidth(), window.getHeight());
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+      shader.loadMatrix(mp, mv);
+
+
+      // シェーダプログラムの使用開始 (時刻 t にもとづく回転アニメーション)
+      for (int i = 0; i < objects; ++i)
+      {
+        // アニメーションの変換行列
+        const auto ma{ animate(t, i) };
+
+        // 図形の材質
+        objectMaterialBuffer.select(i);
+
+        // 図形の描画
+        shader.loadModelviewMatrix(mv * ma);
+        object->draw();
+      }
 
     }
+    /**
     // 影の描画
     //陰面処理の無効化
     //glDisable(GL_DEPTH_TEST);
@@ -278,7 +311,7 @@ int GgApp::main(int argc, const char* const* argv)
       shader.loadModelviewMatrix(mv * ma);
       object->draw();
     }
-
+    /**/
     // カラーバッファを入れ替えてイベントを取り出す
     window.swapBuffers();
   }
