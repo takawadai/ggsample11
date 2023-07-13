@@ -47,6 +47,9 @@ const GgSimpleShader::Material shadowMaterial
 // ワールド座標系の光源位置
 const GgVector lp{ 0.0f, 4.0f, 0.0f, 1.0f };
 
+//ワールド座標系の光源の目標位置
+const GLfloat lt[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
 // アニメーションの変換行列を求める
 static GgMatrix animate(GLfloat t, int i)
 {
@@ -97,8 +100,22 @@ int GgApp::main(int argc, const char* const* argv)
     objectMaterialBuffer.loadAmbientAndDiffuse(r, g, b, 1.0f, i);
   }
 
+
+
   // ビュー変換行列を mv に求める
   const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
+
+  //視点座標系の光源位置を求め光源データに設定
+  mv.projection(light.position, lp);
+
+  //影付き処理用の視野変換行列を求める
+  const GgMatrix mvs(ggLookat(lp[0], lp[1], lp[2], lt[0], lt[1], lt[2], 0.0f, 0.0f, 1.0f));
+
+  //影付き処理用の投影変換行列を求める
+  const GgMatrix mps(ggPerspective(1.5f, 1.0f, 1.0f, 5.0f));
+
+  //影付き処理用の視野変換行列を求める
+  const GgMatrix ms(mps * mvs);
 
   //
   // 影つけ処理の設定
