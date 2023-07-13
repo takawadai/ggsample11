@@ -115,12 +115,21 @@ int GgApp::main(int argc, const char* const* argv)
   //   【宿題】これを Projection Shadow 用の変換行列に置き換える
   // 　　　　　※この変換行列はシャドウマッピングでは使いません
   //
+  /**
   const GLfloat m[]
   {
       lp.at(1),   -lp.at(0),   0.0f,   0.0f,
       0.0f,   0.0f,   0.0f,   0.0f,
       0.0f,   -lp.at(3),   lp.at(1),   0.0f,
-      0.0f,   0.0f,   0.0f,   lp.at(2)
+      0.0f,   -1.0f,   0.0f,   lp.at(2)
+  };
+  /**/
+  const GLfloat m[]
+  {
+      1.0f,   0.0f,   0.0f,   0.0f,
+      0.0f,   0.0f,   0.0f,   0.0f,
+      0.0f,   0.0f,   1.0f,   0.0f,
+      0.0f,   0.0f,   0.0f,   1.0f
   };
   const GgMatrix ms{ m };
 
@@ -166,11 +175,12 @@ int GgApp::main(int argc, const char* const* argv)
     // 　　　影のオブジェクトが確実に描画されるよう隠面消去処理を無効にします
     // 　　　※この処理はシャドウマッピングでは不要です
     //
-
+  
     // 影の材質
     materialBuffer.select();
 
     // 影の描画
+    //陰面処理の無効化
     glDisable(GL_DEPTH_TEST);
     for (int i = 0; i < objects; ++i)
     {
