@@ -220,6 +220,20 @@ int GgApp::main(int argc, const char* const* argv)
     // 影の材質
     materialBuffer.select();
 
+    //シェーダプログラムの使用開始
+    while (window.shouldClose() == GL_FALSE)
+    {
+      const float t(static_cast<float>(fmod(glfwGetTime(), cycle) / cycle));
+
+      const GgMatrix mp(ggPerspective(0.5f, window.getAspect(), 1.0f, 15.0f));
+
+
+      //シェーダプログラムの使用開始
+      shader.use();
+      shader.loadLight(light);//テキスト通りなのにエラーでた
+      glViewport(0, 0, dWidth, dHeight);
+
+    }
     // 影の描画
     //陰面処理の無効化
     //glDisable(GL_DEPTH_TEST);
