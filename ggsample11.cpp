@@ -256,6 +256,7 @@ int GgApp::main(int argc, const char* const* argv)
    //glDisable(GL_DEPTH_TEST);
 
     //多分この処理はいらん
+    /**
     for (int i = 0; i < objects; ++i)
     {
       // アニメーションの変換行列
@@ -267,6 +268,7 @@ int GgApp::main(int argc, const char* const* argv)
       ellipse->draw();
     }
     glEnable(GL_DEPTH_TEST);
+    /**/
 
 
     // ３．図形を描画します
