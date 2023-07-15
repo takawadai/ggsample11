@@ -17,7 +17,11 @@ layout (std140) uniform Material
   vec4 kspec;                                         // 鏡面反射係数
   float kshi;                                         // 輝き係数
 };
+
+//シャドウマップの変換行列
 uniform mat4 ms;
+
+//光源を視点に置いた時の頂点のスクリーン座標
 out vec4 ps;
 
 // 変換行列
@@ -49,5 +53,7 @@ void main(void)
 
   // 頂点のスクリーン座標
   gl_Position = mp * p;
+
+  //光源を視点に置いた時の頂点のスクリーン座標
   ps = ms * pv;
 }
