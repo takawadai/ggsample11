@@ -211,7 +211,10 @@ int GgApp::main(int argc, const char* const* argv)
     //デプステクスチャのテクスチャユニットを指定する
     glUniform1i(depthLoc, 0);
     glUniformMatrix4fv(msLoc, 1, GL_FALSE, ms.get());
-    
+
+    //ポリゴンオフセットの追加
+    glPolygonOffset(1.0f, 1.0f);
+    glEnable(GL_POLYGON_OFFSET_FILL);
 
     //視点方向からのレンダリング
     glViewport(0, 0, window.getWidth(), window.getHeight());
