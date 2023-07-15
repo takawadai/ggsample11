@@ -137,15 +137,6 @@ int GgApp::main(int argc, const char* const* argv)
   //   【宿題】これを Projection Shadow 用の変換行列に置き換える
   // 　　　　　※この変換行列はシャドウマッピングでは使いません
   //
-  /**
-  const GLfloat m[]
-  {
-      lp.at(1),   -lp.at(0),   0.0f,   0.0f,
-      0.0f,   0.0f,   0.0f,   0.0f,
-      0.0f,   -lp.at(3),   lp.at(1),   0.0f,
-      0.0f,   -1.0f,   0.0f,   lp.at(2)
-  };
-  /**/
   const GLfloat m[]
   {
       1.0f,   0.0f,   0.0f,   0.0f,
@@ -251,12 +242,12 @@ int GgApp::main(int argc, const char* const* argv)
     //
   
     // 影の材質
+    /**
     materialBuffer.select();
     // 影の描画
-   //陰面処理の無効化
-   //glDisable(GL_DEPTH_TEST);
+    //陰面処理の無効化
+    //glDisable(GL_DEPTH_TEST);
 
-    //多分この処理はいらん
     /**
     for (int i = 0; i < objects; ++i)
     {
@@ -287,41 +278,7 @@ int GgApp::main(int argc, const char* const* argv)
        object->draw();
     }
 
-    
-    /**
-    // 影の描画
-    //陰面処理の無効化
-    //glDisable(GL_DEPTH_TEST);
-    for (int i = 0; i < objects; ++i)
-    {
-      // アニメーションの変換行列
-      const auto ma{ animate(t, i) };
-
-      // 影の描画 (楕円は XY 平面上にあるので X 軸中心に -π/2 回転)
-      //   【宿題】楕円の代わりに影を落とす図形そのものを描く (-π/2 回転は不要)
-      shader.loadModelviewMatrix(mv * ms * ma * ggRotateX(-1.570796f));
-      ellipse->draw();
-    }
-    glEnable(GL_DEPTH_TEST);
-
-    //
-    // ３．図形を描画します
-    //
-
-    // シェーダプログラムの使用開始 (時刻 t にもとづく回転アニメーション)
-    for (int i = 0; i < objects; ++i)
-    {
-      // アニメーションの変換行列
-      const auto ma{ animate(t, i) };
-
-      // 図形の材質
-      objectMaterialBuffer.select(i);
-
-      // 図形の描画
-      shader.loadModelviewMatrix(mv * ma);
-      object->draw();
-    }
-    /**/
+   
     // カラーバッファを入れ替えてイベントを取り出す
     window.swapBuffers();
   }
