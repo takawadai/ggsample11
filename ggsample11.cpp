@@ -193,7 +193,6 @@ int GgApp::main(int argc, const char* const* argv)
     shader.use(lightBuffer);
 
     //視点を光源位置においてレンダリング
-    /**/
     glViewport(0, 0, dWidth, dHeight);
     glClear(GL_DEPTH_BUFFER_BIT);
     for (int i = 1; i <= objects; ++i)
@@ -202,26 +201,21 @@ int GgApp::main(int argc, const char* const* argv)
       shader.loadMatrix(mps, mvs * ma);
       object->draw();
     }
-    /**/
 
-    //デプスバッファをテクスチャに転送 ここで今のところメモリエラーが発生している
-    /**/
+    //デプスバッファをテクスチャに転送 
     glReadPixels(0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, dtex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, dWidth, dHeight, GL_DEPTH_COMPONENT, GL_FLOAT, depth.get());
-    /**/
 
     //デプステクスチャのテクスチャユニットを指定する
-    /**/
     glUniform1i(depthLoc, 0);
     glUniformMatrix4fv(msLoc, 1, GL_FALSE, ms.get());
-    /**/
+    
 
     //視点方向からのレンダリング
-    /**/
     glViewport(0, 0, window.getWidth(), window.getHeight());
-    /**/
+    
 
     // 画面消去
 
